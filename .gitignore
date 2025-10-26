@@ -137,3 +137,11 @@ dist
 # Vite logs files
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
+
+# Node/Vite/Playwright artifacts
+.vite
+.turbo
+.DS_Store
+playwright-report
+test-results
+.playwright
