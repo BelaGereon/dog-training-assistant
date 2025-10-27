@@ -2,7 +2,7 @@ import { describe, it, expect } from "vitest";
 import type { ScheduleResult, ScheduleState } from "../types";
 import { nextSchedule } from "../services/scheduling";
 
-const getDateFromISODate = (date: Date): string => {
+const iso = (date: Date): string => {
   return date.toISOString().slice(0, 10);
 };
 
@@ -17,9 +17,10 @@ describe('Scheduling - when I log today as "OK" (rating=2)', () => {
     };
 
     const result: ScheduleResult = nextSchedule(currentSchedule, 2, today);
-    const dueDateISO = getDateFromISODate(result.dueAt);
 
     expect(result.intervalInDays).toBe(7); // 5 * 1.4 = 7
-    expect(dueDateISO).toBe("2025-01-08"); // 2025-01-01 + 7 days
+    expect(iso(result.dueAt)).toBe("2025-01-08"); // 2025-01-01 + 7 days
+    expect(result.ease).toBe(currentSchedule.ease);
+    expect(result.deck).toBe(currentSchedule.deck);
   });
 });
