@@ -43,3 +43,22 @@ describe('Scheduling - when I log today as "Forgot" (rating=0)', () => {
     expect(result.deck).toBe(currentSchedule.deck);
   });
 });
+
+describe('Scheduling - when I log today as "Easy" (rating=3)', () => {
+  it("it doubles the training interval and sets dueAt accordingly", () => {
+    const today: Date = new Date("2025-01-01");
+
+    const currentSchedule: ScheduleState = {
+      intervalInDays: 4,
+      ease: 2.5,
+      deck: 3,
+    };
+
+    const result: ScheduleResult = nextSchedule(currentSchedule, 3, today);
+
+    expect(result.intervalInDays).toBe(8);
+    expect(iso(result.dueAt)).toBe("2025-01-09"); // 2025-01-01 + 8 days
+    expect(result.ease).toBe(currentSchedule.ease);
+    expect(result.deck).toBe(currentSchedule.deck);
+  });
+});
