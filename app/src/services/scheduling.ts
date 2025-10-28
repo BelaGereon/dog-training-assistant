@@ -3,13 +3,16 @@ import type { ScheduleState, ScheduleResult, Rating } from "../types";
 const OK_FACTOR = 1.4; // multiplier for "OK" rating to extend interval by ~40%
 const EASY_FACTOR = 2.0; // multiplier for "Easy" rating to double the interval
 
+const MIN_EASE = 1.8;
+const MAX_EASE = 3.0;
+
 export function nextSchedule(
   currentState: ScheduleState,
   userRating: Rating,
   today: Date
 ): ScheduleResult {
   const nextInterval = getNextInterval(userRating, currentState.intervalInDays);
-  const ease = getEase(userRating, currentState.ease);
+  const ease = adjustEase(currentState.ease, userRating);
 
   const dueAt = new Date(today);
   dueAt.setDate(dueAt.getDate() + nextInterval);
@@ -36,21 +39,9 @@ function getNextInterval(userRating: Rating, intervalInDays: number): number {
   );
 }
 
-function getEase(userRating: Rating, currentEase: number): number {
-  const EASE_BOTTOM_CAP = 1.8;
-  const EASE_TOP_CAP = 3;
-
-  if (userRating === 0) {
-    return Math.max(EASE_BOTTOM_CAP, currentEase - 0.3); // decrease ease but not below 1.8
-  }
-
-  if (userRating === 1) {
-    return Math.max(EASE_BOTTOM_CAP, currentEase - 0.15); // decrease ease but not below 1.3
-  }
-
-  if (userRating === 3) {
-    return Math.min(EASE_TOP_CAP, currentEase + 0.05); // increase ease but not above 3
-  }
-
-  return currentEase; // keep ease unchanged for "OK"
+function adjustEase(ease: number, rating: Rating): number {
+  const modifier =
+    rating === 3 ? +0.05 : rating === 1 ? -0.15 : rating === 0 ? -0.3 : 0.0;
+  const next = ease + modifier;
+  return Math.max(MIN_EASE, Math.min(MAX_EASE, next));
 }
