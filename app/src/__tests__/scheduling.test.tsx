@@ -6,7 +6,7 @@ const iso = (date: Date): string => {
   return date.toISOString().slice(0, 10);
 };
 
-describe('Scheduling - when I log today as "OK" (rating=2)', () => {
+describe('Scheduling - when I log the excercise as "OK" (rating=2)', () => {
   const rating = 2;
   let today: Date;
   let currentSchedule: ScheduleState;
@@ -28,7 +28,7 @@ describe('Scheduling - when I log today as "OK" (rating=2)', () => {
     result = run();
   });
 
-  it("schedules the next review roughly 40% farther out (rounded up) and sets dueAt accordingly", () => {
+  it("schedules the next excercise roughly 40% farther out (rounded up) and sets dueAt accordingly", () => {
     expect(result.intervalInDays).toBe(7); // 5 * 1.4 = 7
     expect(iso(result.dueAt)).toBe("2025-01-08"); // 2025-01-01 + 7 days
   });
@@ -38,7 +38,7 @@ describe('Scheduling - when I log today as "OK" (rating=2)', () => {
   });
 });
 
-describe('Scheduling - when I log today as "Forgot" (rating=0)', () => {
+describe('Scheduling - when I log the excercise as "Forgot" (rating=0)', () => {
   const rating = 0;
   let today: Date;
   let currentSchedule: ScheduleState;
@@ -58,7 +58,7 @@ describe('Scheduling - when I log today as "Forgot" (rating=0)', () => {
     result = run();
   });
 
-  it("schedules the next review for the next day", () => {
+  it("schedules the excercise for the next day", () => {
     expect(result.intervalInDays).toBe(1);
     expect(iso(result.dueAt)).toBe("2025-01-02"); // 2025-01-01 + 1 day
   });
@@ -83,7 +83,7 @@ describe('Scheduling - when I log today as "Forgot" (rating=0)', () => {
   });
 });
 
-describe('Scheduling - when I log today as "Easy" (rating=3)', () => {
+describe('Scheduling - when I log the excercise as "Easy" (rating=3)', () => {
   const rating = 3;
   let today: Date;
   let currentSchedule: ScheduleState;
@@ -130,7 +130,7 @@ describe('Scheduling - when I log today as "Easy" (rating=3)', () => {
   });
 });
 
-describe('Scheduling - when I log today as "Hard" (rating=1)', () => {
+describe('Scheduling - when I log the excercise as "Hard" (rating=1)', () => {
   const rating = 1;
   let today: Date;
   let currentSchedule: ScheduleState;
@@ -150,7 +150,7 @@ describe('Scheduling - when I log today as "Hard" (rating=1)', () => {
     result = run();
   });
 
-  it("schedules the next review for 2 days later", () => {
+  it("schedules the excercise for 2 days later", () => {
     expect(result.intervalInDays).toBe(2);
     expect(iso(result.dueAt)).toBe("2025-01-03"); // 2025-01-01 + 2 days
   });
