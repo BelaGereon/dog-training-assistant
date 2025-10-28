@@ -45,8 +45,12 @@ function getNextInterval(userRating: Rating, intervalInDays: number): number {
 }
 
 function adjustEase(ease: number, rating: Rating): number {
+  // prettier-ignore
   const modifier =
-    rating === 3 ? +0.05 : rating === 1 ? -0.15 : rating === 0 ? -0.3 : 0.0;
+    rating === 3 ? +0.05 :
+    rating === 1 ? -0.15 :
+    rating === 0 ? -0.30 : 0.0;
+
   const next = ease + modifier;
   return Math.max(MIN_EASE, Math.min(MAX_EASE, next));
 }
