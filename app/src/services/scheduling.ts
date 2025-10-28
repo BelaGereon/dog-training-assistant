@@ -8,35 +8,46 @@ export function nextSchedule(
   userRating: Rating,
   today: Date
 ): ScheduleResult {
-  let ratingMultiplier = userRating === 2 ? OK_FACTOR : 1;
+  const nextInterval = getNextInterval(userRating, currentState.intervalInDays);
+  const ease = getEase(userRating, currentState.ease);
 
-  if (userRating === 3) {
-    ratingMultiplier = EASY_FACTOR;
-  }
-
-  function getNextInterval(): number {
-    if (userRating === 0) {
-      return 1; // if "Forgot", schedule for next day
-    }
-
-    if (userRating === 1) {
-      return 2; // if "Hard", schedule for 2 days later
-    }
-
-    return Math.max(
-      1,
-      Math.ceil(currentState.intervalInDays * ratingMultiplier)
-    );
-  } // ensure at least 1 day
-
-  // Compute the next interval rounding up to the nearest whole day
-  const nextInterval = getNextInterval();
-
-  // Create a new Date for the due date so we don't mutate the input date
   const dueAt = new Date(today);
-
   dueAt.setDate(dueAt.getDate() + nextInterval);
 
   // Return the new schedule state carrying over ease and deck, with updated interval and due date
-  return { ...currentState, intervalInDays: nextInterval, dueAt }; // spread existing state and add new fields
+  return { ...currentState, intervalInDays: nextInterval, ease, dueAt }; // spread existing state and add new fields
+}
+
+function getNextInterval(userRating: Rating, intervalInDays: number): number {
+  if (userRating === 0) {
+    return 1; // if "Forgot", schedule for next day
+  }
+
+  if (userRating === 1) {
+    return 2; // if "Hard", schedule for 2 days later
+  }
+
+  const ratingMultiplier =
+    userRating === 2 ? OK_FACTOR : userRating === 3 ? EASY_FACTOR : 1;
+
+  return Math.max(
+    1, // ensure at least 1 day
+    Math.ceil(intervalInDays * ratingMultiplier)
+  );
+}
+
+function getEase(userRating: Rating, currentEase: number): number {
+  if (userRating === 0) {
+    return Math.max(1.8, currentEase - 0.3); // decrease ease but not below 1.8
+  }
+
+  if (userRating === 1) {
+    return Math.max(1.8, currentEase - 0.15); // decrease ease but not below 1.3
+  }
+
+  if (userRating === 3) {
+    return Math.min(3, currentEase + 0.05); // increase ease but not above 3
+  }
+
+  return currentEase; // keep ease unchanged for "OK"
 }
