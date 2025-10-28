@@ -12,13 +12,18 @@ export function nextSchedule(
   today: Date
 ): ScheduleResult {
   const nextInterval = getNextInterval(userRating, currentState.intervalInDays);
-  const ease = adjustEase(currentState.ease, userRating);
+  const nextEase = adjustEase(currentState.ease, userRating);
 
   const dueAt = new Date(today);
   dueAt.setDate(dueAt.getDate() + nextInterval);
 
   // Return the new schedule state carrying over ease and deck, with updated interval and due date
-  return { ...currentState, intervalInDays: nextInterval, ease, dueAt }; // spread existing state and add new fields
+  return {
+    ...currentState,
+    intervalInDays: nextInterval,
+    ease: nextEase,
+    dueAt,
+  }; // spread existing state and add new fields
 }
 
 function getNextInterval(userRating: Rating, intervalInDays: number): number {
