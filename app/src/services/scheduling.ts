@@ -1,13 +1,18 @@
 import type { ScheduleState, ScheduleResult, Rating } from "../types";
 
 const OK_FACTOR = 1.4; // multiplier for "OK" rating to extend interval by ~40%
+const EASY_FACTOR = 2.0; // multiplier for "Easy" rating to double the interval
 
 export function nextSchedule(
   currentState: ScheduleState,
   userRating: Rating,
   today: Date
 ): ScheduleResult {
-  const ratingMultiplier = userRating === 2 ? OK_FACTOR : 1;
+  let ratingMultiplier = userRating === 2 ? OK_FACTOR : 1;
+
+  if (userRating === 3) {
+    ratingMultiplier = EASY_FACTOR;
+  }
 
   function getNextInterval(): number {
     if (userRating === 0) {
