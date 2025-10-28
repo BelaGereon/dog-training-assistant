@@ -12,7 +12,7 @@ describe("Scheduling - ", () => {
   let result: ScheduleResult;
   let originalEase: number;
 
-  describe('when I log the excercise as "OK" (rating=2)', () => {
+  describe('when I log the exercise as "OK" (rating=2)', () => {
     const rating = 2;
     const run = () => nextSchedule(currentSchedule, rating, TODAY);
 
@@ -28,7 +28,7 @@ describe("Scheduling - ", () => {
       result = run();
     });
 
-    it("schedules the next excercise roughly 40% farther out (rounded up) and sets dueAt accordingly", () => {
+    it("schedules the next exercise roughly 40% farther out (rounded up) and sets dueAt accordingly", () => {
       expect(result.intervalInDays).toBe(7); // 5 * 1.4 = 7
       expect(iso(result.dueAt)).toBe("2025-01-08"); // 2025-01-01 + 7 days
     });
@@ -38,7 +38,7 @@ describe("Scheduling - ", () => {
     });
   });
 
-  describe('when I log the excercise as "Forgot" (rating=0)', () => {
+  describe('when I log the exercise as "Forgot" (rating=0)', () => {
     const rating = 0;
 
     const run = () => nextSchedule(currentSchedule, rating, TODAY);
@@ -53,7 +53,7 @@ describe("Scheduling - ", () => {
       result = run();
     });
 
-    it("schedules the excercise for the next day", () => {
+    it("schedules the exercise for the next day", () => {
       expect(result.intervalInDays).toBe(1);
       expect(iso(result.dueAt)).toBe("2025-01-02"); // 2025-01-01 + 1 day
     });
@@ -78,7 +78,7 @@ describe("Scheduling - ", () => {
     });
   });
 
-  describe('when I log the excercise as "Easy" (rating=3)', () => {
+  describe('when I log the exercise as "Easy" (rating=3)', () => {
     const rating = 3;
     const run = () => nextSchedule(currentSchedule, rating, TODAY);
 
@@ -119,7 +119,7 @@ describe("Scheduling - ", () => {
     });
   });
 
-  describe('when I log the excercise as "Hard" (rating=1)', () => {
+  describe('when I log the exercise as "Hard" (rating=1)', () => {
     const rating = 1;
     const run = () => nextSchedule(currentSchedule, rating, TODAY);
 
@@ -133,7 +133,7 @@ describe("Scheduling - ", () => {
       result = run();
     });
 
-    it("schedules the excercise for 2 days later", () => {
+    it("schedules the exercise for 2 days later", () => {
       expect(result.intervalInDays).toBe(2);
       expect(iso(result.dueAt)).toBe("2025-01-03"); // 2025-01-01 + 2 days
     });
