@@ -24,3 +24,22 @@ describe('Scheduling - when I log today as "OK" (rating=2)', () => {
     expect(result.deck).toBe(currentSchedule.deck);
   });
 });
+
+describe('Scheduling - when I log today as "Forgot" (rating=0)', () => {
+  it("it schedules the next review for the next day", () => {
+    const today: Date = new Date("2025-01-01");
+
+    const currentSchedule: ScheduleState = {
+      intervalInDays: 10,
+      ease: 2.5,
+      deck: 3,
+    };
+
+    const result: ScheduleResult = nextSchedule(currentSchedule, 0, today);
+
+    expect(result.intervalInDays).toBe(1);
+    expect(iso(result.dueAt)).toBe("2025-01-02"); // 2025-01-01 + 1 day
+    expect(result.ease).toBe(currentSchedule.ease);
+    expect(result.deck).toBe(currentSchedule.deck);
+  });
+});

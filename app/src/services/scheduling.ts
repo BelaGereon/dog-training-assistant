@@ -10,6 +10,10 @@ export function nextSchedule(
   const ratingMultiplier = userRating === 2 ? OK_FACTOR : 1;
 
   function getNextInterval(): number {
+    if (userRating === 0) {
+      return 1; // if "Forgot", schedule for next day
+    }
+
     return Math.max(
       1,
       Math.ceil(currentState.intervalInDays * ratingMultiplier)
