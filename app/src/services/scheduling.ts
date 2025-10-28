@@ -37,16 +37,19 @@ function getNextInterval(userRating: Rating, intervalInDays: number): number {
 }
 
 function getEase(userRating: Rating, currentEase: number): number {
+  const EASE_BOTTOM_CAP = 1.8;
+  const EASE_TOP_CAP = 3;
+
   if (userRating === 0) {
-    return Math.max(1.8, currentEase - 0.3); // decrease ease but not below 1.8
+    return Math.max(EASE_BOTTOM_CAP, currentEase - 0.3); // decrease ease but not below 1.8
   }
 
   if (userRating === 1) {
-    return Math.max(1.8, currentEase - 0.15); // decrease ease but not below 1.3
+    return Math.max(EASE_BOTTOM_CAP, currentEase - 0.15); // decrease ease but not below 1.3
   }
 
   if (userRating === 3) {
-    return Math.min(3, currentEase + 0.05); // increase ease but not above 3
+    return Math.min(EASE_TOP_CAP, currentEase + 0.05); // increase ease but not above 3
   }
 
   return currentEase; // keep ease unchanged for "OK"
