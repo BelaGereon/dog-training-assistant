@@ -62,3 +62,22 @@ describe('Scheduling - when I log today as "Easy" (rating=3)', () => {
     expect(result.deck).toBe(currentSchedule.deck);
   });
 });
+
+describe('Scheduling - when I log today as "Hard" (rating=1)', () => {
+  it("it schedules the next review for 2 days later", () => {
+    const today: Date = new Date("2025-01-01");
+
+    const currentSchedule: ScheduleState = {
+      intervalInDays: 10,
+      ease: 2.5,
+      deck: 3,
+    };
+
+    const result: ScheduleResult = nextSchedule(currentSchedule, 1, today);
+
+    expect(result.intervalInDays).toBe(2);
+    expect(iso(result.dueAt)).toBe("2025-01-03"); // 2025-01-01 + 2 days
+    expect(result.ease).toBe(currentSchedule.ease);
+    expect(result.deck).toBe(currentSchedule.deck);
+  });
+});
