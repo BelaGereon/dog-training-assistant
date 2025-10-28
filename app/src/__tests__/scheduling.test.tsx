@@ -5,17 +5,16 @@ import { nextSchedule } from "../services/scheduling";
 const iso = (date: Date): string => {
   return date.toISOString().slice(0, 10);
 };
+const TODAY = new Date("2025-01-01");
 
 describe("Scheduling - ", () => {
-  const today = new Date("2025-01-01");
-
   let currentSchedule: ScheduleState;
   let result: ScheduleResult;
   let originalEase: number;
 
   describe('when I log the excercise as "OK" (rating=2)', () => {
     const rating = 2;
-    const run = () => nextSchedule(currentSchedule, rating, today);
+    const run = () => nextSchedule(currentSchedule, rating, TODAY);
 
     beforeEach(() => {
       currentSchedule = {
@@ -42,7 +41,7 @@ describe("Scheduling - ", () => {
   describe('when I log the excercise as "Forgot" (rating=0)', () => {
     const rating = 0;
 
-    const run = () => nextSchedule(currentSchedule, rating, today);
+    const run = () => nextSchedule(currentSchedule, rating, TODAY);
 
     beforeEach(() => {
       currentSchedule = {
@@ -81,7 +80,7 @@ describe("Scheduling - ", () => {
 
   describe('when I log the excercise as "Easy" (rating=3)', () => {
     const rating = 3;
-    const run = () => nextSchedule(currentSchedule, rating, today);
+    const run = () => nextSchedule(currentSchedule, rating, TODAY);
 
     beforeEach(() => {
       currentSchedule = {
@@ -122,7 +121,7 @@ describe("Scheduling - ", () => {
 
   describe('when I log the excercise as "Hard" (rating=1)', () => {
     const rating = 1;
-    const run = () => nextSchedule(currentSchedule, rating, today);
+    const run = () => nextSchedule(currentSchedule, rating, TODAY);
 
     beforeEach(() => {
       currentSchedule = {
