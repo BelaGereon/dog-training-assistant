@@ -19,6 +19,10 @@ export function nextSchedule(
       return 1; // if "Forgot", schedule for next day
     }
 
+    if (userRating === 1) {
+      return 2; // if "Hard", schedule for 2 days later
+    }
+
     return Math.max(
       1,
       Math.ceil(currentState.intervalInDays * ratingMultiplier)
