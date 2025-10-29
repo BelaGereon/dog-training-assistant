@@ -96,6 +96,17 @@ describe("Scheduling - ", () => {
         expect(result.ease).toBe(1.8);
       });
     });
+
+    describe("when already in the first deck", () => {
+      beforeEach(() => {
+        currentSchedule = { intervalInDays: 5, ease: 2.5, deck: 1 };
+        result = run();
+      });
+
+      it("stays in the first deck", () => {
+        expect(result.deck).toBe(1);
+      });
+    });
   });
 
   describe('when I log the exercise as "Easy" (rating=3)', () => {
@@ -141,6 +152,30 @@ describe("Scheduling - ", () => {
         expect(result.ease).toBe(3.0);
       });
     });
+
+    describe("when moving up and the new deck baseline exceeds the proposed interval", () => {
+      beforeEach(() => {
+        // from deck 2 → deck 3 (baseline 7); proposed = ceil(3 * 2) = 6 → clamp to 7
+        currentSchedule = { intervalInDays: 3, ease: 2.5, deck: 2 };
+        result = run();
+      });
+
+      it("raises the interval to the new deck's baseline", () => {
+        expect(result.deck).toBe(3);
+        expect(result.intervalInDays).toBe(7);
+      });
+    });
+
+    describe("when already in the top deck", () => {
+      beforeEach(() => {
+        currentSchedule = { intervalInDays: 30, ease: 2.9, deck: 5 };
+        result = run();
+      });
+
+      it("does not move beyond the top deck", () => {
+        expect(result.deck).toBe(5);
+      });
+    });
   });
 
   describe('when I log the exercise as "Hard" (rating=1)', () => {
@@ -182,6 +217,30 @@ describe("Scheduling - ", () => {
 
       it("clamps ease at 1.8", () => {
         expect(result.ease).toBe(1.8);
+      });
+    });
+
+    describe("when moving down and the new deck baseline exceeds the proposed interval", () => {
+      beforeEach(() => {
+        // from deck 3 → deck 2 (baseline 3); proposed = 2 → clamp to 3
+        currentSchedule = { intervalInDays: 10, ease: 2.5, deck: 3 };
+        result = run();
+      });
+
+      it("raises the interval to the new deck's baseline", () => {
+        expect(result.deck).toBe(2);
+        expect(result.intervalInDays).toBe(3);
+      });
+    });
+
+    describe("when already in the first deck", () => {
+      beforeEach(() => {
+        currentSchedule = { intervalInDays: 1, ease: 2.0, deck: 1 };
+        result = run();
+      });
+
+      it("does not move below the first deck", () => {
+        expect(result.deck).toBe(1);
       });
     });
   });
