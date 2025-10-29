@@ -40,6 +40,18 @@ describe("Scheduling - ", () => {
     it("retains the same deck", () => {
       expect(result.deck).toBe(currentSchedule.deck);
     });
+
+    describe("when the deck baseline exceeds the proposed interval", () => {
+      beforeEach(() => {
+        // deck 3 baseline = 7; proposed = ceil(4 * 1.4) = 6 → clamp to 7
+        currentSchedule = { intervalInDays: 4, ease: 2.5, deck: 3 };
+        result = run();
+      });
+
+      it("honors the deck baseline for the current deck", () => {
+        expect(result.intervalInDays).toBe(7);
+      });
+    });
   });
 
   describe('when I log the exercise as "Forgot" (rating=0)', () => {
