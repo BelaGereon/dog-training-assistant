@@ -28,8 +28,8 @@ describe("Scheduling - ", () => {
     });
 
     it("schedules the next exercise roughly 40% farther out (rounded up) and sets dueAt accordingly", () => {
-      expect(result.intervalInDays).toBe(7); // 5 * 1.4 = 7
-      expect(iso(result.dueAt)).toBe("2025-01-08"); // 2025-01-01 + 7 days
+      expect(result.intervalInDays).toBe(7);
+      expect(iso(result.dueAt)).toBe("2025-01-08");
     });
 
     it("keeps the ease unchanged", () => {
@@ -68,7 +68,7 @@ describe("Scheduling - ", () => {
 
     it("schedules the exercise for the next day", () => {
       expect(result.intervalInDays).toBe(1);
-      expect(iso(result.dueAt)).toBe("2025-01-02"); // 2025-01-01 + 1 day
+      expect(iso(result.dueAt)).toBe("2025-01-02");
     });
 
     it("moves the exercise into the first deck", () => {
@@ -122,8 +122,8 @@ describe("Scheduling - ", () => {
     });
 
     it("doubles the training interval and sets dueAt accordingly", () => {
-      expect(result.intervalInDays).toBe(6); // 3 * 2 = 6
-      expect(iso(result.dueAt)).toBe("2025-01-07"); // 2025-01-01 + 8 days
+      expect(result.intervalInDays).toBe(6);
+      expect(iso(result.dueAt)).toBe("2025-01-07");
     });
 
     it("raises ease by 0.05", () => {
@@ -164,12 +164,17 @@ describe("Scheduling - ", () => {
 
     describe("when already in the top deck", () => {
       beforeEach(() => {
-        currentSchedule = { intervalInDays: 30, ease: 2.9, deck: 5 };
+        currentSchedule = { intervalInDays: 25, ease: 2.9, deck: 5 };
         result = run();
       });
 
       it("does not move beyond the top deck", () => {
         expect(result.deck).toBe(5);
+      });
+
+      it("keeps the larger doubled interval", () => {
+        expect(result.deck).toBe(5);
+        expect(result.intervalInDays).toBe(50);
       });
     });
   });
@@ -189,7 +194,7 @@ describe("Scheduling - ", () => {
 
     it("schedules the exercise for 2 days later", () => {
       expect(result.intervalInDays).toBe(2);
-      expect(iso(result.dueAt)).toBe("2025-01-03"); // 2025-01-01 + 2 days
+      expect(iso(result.dueAt)).toBe("2025-01-03");
     });
 
     it("moves the exercise down one deck", () => {

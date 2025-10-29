@@ -1,7 +1,7 @@
 // scheduling.ts
 import type { ScheduleState, ScheduleResult } from "../types";
 
-export const POLICY = {
+const POLICY = {
   ratings: { FORGOT: 0, HARD: 1, OK: 2, EASY: 3 },
   factors: { OK: 1.4, EASY: 2.0 },
   ease: { FORGOT: -0.3, HARD: -0.15, OK: 0.0, EASY: +0.05 },
@@ -30,8 +30,6 @@ export function nextSchedule(
   return { ...state, intervalInDays: interval, ease, deck: nextDeck, dueAt };
 }
 
-// --- helpers ---
-
 function proposedInterval(prev: number, rating: Rating): number {
   switch (rating) {
     case "FORGOT":
@@ -46,15 +44,15 @@ function proposedInterval(prev: number, rating: Rating): number {
 }
 
 function computeNextDeck(current: number, rating: Rating): number {
-  const unclamped =
-    rating === "FORGOT"
-      ? 1
-      : rating === "HARD"
-      ? current - 1
-      : rating === "OK"
-      ? current
-      : current + 1;
-  return Math.max(1, Math.min(5, unclamped));
+  let next = current;
+  // prettier-ignore
+  switch (rating) {
+    case "FORGOT" : next = 1; break;
+    case "HARD"   : next = current - 1; break;
+    case "OK"     : next = current; break;
+    case "EASY"   : next = current + 1; break;
+  }
+  return Math.max(1, Math.min(5, next));
 }
 
 function adjustEase(ease: number, rating: Rating): number {
