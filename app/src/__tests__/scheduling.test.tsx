@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import type { ScheduleResult, ScheduleState } from "../types";
-import { nextSchedule } from "../services/scheduling";
+import { nextSchedule, type Rating } from "../services/scheduling";
 
 const iso = (date: Date): string => {
   return date.toISOString().slice(0, 10);
@@ -243,5 +243,17 @@ describe("Scheduling - ", () => {
         expect(result.deck).toBe(1);
       });
     });
+  });
+
+  it("throws if an unhandled rating slips through", () => {
+    const rogueRating = "SUPER" as Rating;
+    const run = () =>
+      nextSchedule(
+        { intervalInDays: 2, ease: 2.2, deck: 3 },
+        rogueRating,
+        TODAY
+      );
+
+    expect(run).toThrowError(/Unhandled rating: SUPER/);
   });
 });

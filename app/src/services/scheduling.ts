@@ -31,15 +31,16 @@ export function nextSchedule(
 }
 
 function proposedInterval(prev: number, rating: Rating): number {
+  // prettier-ignore
   switch (rating) {
-    case "FORGOT":
-      return POLICY.forgotDays;
-    case "HARD":
-      return POLICY.hardDays;
-    case "OK":
-      return Math.ceil(prev * POLICY.factors.OK);
-    case "EASY":
-      return Math.ceil(prev * POLICY.factors.EASY);
+    case "FORGOT" : return POLICY.forgotDays;
+    case "HARD"   : return POLICY.hardDays;
+    case "OK"     : return Math.ceil(prev * POLICY.factors.OK);
+    case "EASY"   : return Math.ceil(prev * POLICY.factors.EASY);
+    default: {
+      const _exhaustive: never = rating;
+      throw new Error(`Unhandled rating: ${_exhaustive}`);
+    }
   }
 }
 
@@ -51,6 +52,10 @@ function computeNextDeck(current: number, rating: Rating): number {
     case "HARD"   : next = current - 1; break;
     case "OK"     : next = current; break;
     case "EASY"   : next = current + 1; break;
+    default: {
+      const _exhaustive: never = rating;
+      throw new Error(`Unhandled rating: ${_exhaustive}`);
+    }
   }
   return Math.max(1, Math.min(5, next));
 }
