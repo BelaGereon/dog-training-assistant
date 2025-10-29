@@ -12,11 +12,11 @@ const POLICY = {
   deckBaseline: [1, 3, 7, 14, 30],
 } as const;
 
-export type Rating = keyof typeof POLICY.ratings; // "FORGOT" | "HARD" | "OK" | "EASY"
+export type RatingName = keyof typeof POLICY.ratings; // "FORGOT" | "HARD" | "OK" | "EASY"
 
 export function nextSchedule(
   state: ScheduleState,
-  rating: Rating,
+  rating: RatingName,
   today: Date
 ): ScheduleResult {
   const proposed = proposedInterval(state.intervalInDays, rating);
@@ -30,7 +30,7 @@ export function nextSchedule(
   return { ...state, intervalInDays: interval, ease, deck: nextDeck, dueAt };
 }
 
-function proposedInterval(prev: number, rating: Rating): number {
+function proposedInterval(prev: number, rating: RatingName): number {
   // prettier-ignore
   switch (rating) {
     case "FORGOT" : return POLICY.forgotDays;
@@ -44,7 +44,7 @@ function proposedInterval(prev: number, rating: Rating): number {
   }
 }
 
-function computeNextDeck(current: number, rating: Rating): number {
+function computeNextDeck(current: number, rating: RatingName): number {
   let next = current;
   // prettier-ignore
   switch (rating) {
@@ -60,7 +60,7 @@ function computeNextDeck(current: number, rating: Rating): number {
   return Math.max(1, Math.min(5, next));
 }
 
-function adjustEase(ease: number, rating: Rating): number {
+function adjustEase(ease: number, rating: RatingName): number {
   const delta = POLICY.ease[rating];
   const next = ease + delta;
   return Math.max(POLICY.easeMin, Math.min(POLICY.easeMax, next));
