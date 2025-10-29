@@ -36,6 +36,10 @@ describe("Scheduling - ", () => {
     it("keeps the ease unchanged", () => {
       expect(result.ease).toBe(originalEase);
     });
+
+    it("retains the same deck", () => {
+      expect(result.deck).toBe(currentSchedule.deck);
+    });
   });
 
   describe('when I log the exercise as "Forgot" (rating=0)', () => {
@@ -56,6 +60,10 @@ describe("Scheduling - ", () => {
     it("schedules the exercise for the next day", () => {
       expect(result.intervalInDays).toBe(1);
       expect(iso(result.dueAt)).toBe("2025-01-02"); // 2025-01-01 + 1 day
+    });
+
+    it("moves the exercise into the first deck", () => {
+      expect(result.deck).toBe(1);
     });
 
     it("reduces ease by 0.30", () => {
@@ -103,6 +111,10 @@ describe("Scheduling - ", () => {
       expect(result.ease).toBeCloseTo(originalEase + 0.05, 5);
     });
 
+    it("moves the exercise up one deck", () => {
+      expect(result.deck).toBe(currentSchedule.deck + 1);
+    });
+
     describe("when ease is already close to the maximum", () => {
       beforeEach(() => {
         currentSchedule = {
@@ -136,6 +148,10 @@ describe("Scheduling - ", () => {
     it("schedules the exercise for 2 days later", () => {
       expect(result.intervalInDays).toBe(2);
       expect(iso(result.dueAt)).toBe("2025-01-03"); // 2025-01-01 + 2 days
+    });
+
+    it("moves the exercise down one deck", () => {
+      expect(result.deck).toBe(currentSchedule.deck - 1);
     });
 
     it("reduces ease by 0.15", () => {

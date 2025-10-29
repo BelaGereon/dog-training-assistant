@@ -13,6 +13,11 @@ export function nextSchedule(
 ): ScheduleResult {
   const nextInterval = getNextInterval(userRating, currentState.intervalInDays);
   const nextEase = adjustEase(currentState.ease, userRating);
+  // prettier-ignore
+  const nextDeck =
+    userRating === 0 ? 1                    : 
+    userRating === 1 ? currentState.deck - 1: 
+    userRating === 2 ? currentState.deck    : currentState.deck + 1;
 
   const dueAt = new Date(today);
   dueAt.setDate(dueAt.getDate() + nextInterval);
@@ -22,6 +27,7 @@ export function nextSchedule(
     ...currentState,
     intervalInDays: nextInterval,
     ease: nextEase,
+    deck: nextDeck,
     dueAt,
   }; // spread existing state and add new fields
 }
