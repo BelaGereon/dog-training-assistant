@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import type { ScheduleResult, ScheduleState } from "../types";
-import { nextSchedule, type Rating } from "../services/scheduling";
+import { nextSchedule, type RatingName } from "../services/scheduling";
 
 const iso = (date: Date): string => {
   return date.toISOString().slice(0, 10);
@@ -102,6 +102,10 @@ describe("Scheduling - ", () => {
 
       it("stays in the first deck", () => {
         expect(result.deck).toBe(1);
+      });
+
+      it("keeps the 1-day interval", () => {
+        expect(result.intervalInDays).toBe(1);
       });
     });
   });
@@ -235,18 +239,22 @@ describe("Scheduling - ", () => {
 
     describe("when already in the first deck", () => {
       beforeEach(() => {
-        currentSchedule = { intervalInDays: 1, ease: 2.0, deck: 1 };
+        currentSchedule = { intervalInDays: 2, ease: 2.0, deck: 1 };
         result = run();
       });
 
       it("does not move below the first deck", () => {
         expect(result.deck).toBe(1);
       });
+
+      it("keeps the 2-day interval", () => {
+        expect(result.intervalInDays).toBe(2);
+      });
     });
   });
 
   it("throws if an unhandled rating slips through", () => {
-    const rogueRating = "SUPER" as Rating;
+    const rogueRating = "SUPER" as RatingName;
     const run = () =>
       nextSchedule(
         { intervalInDays: 2, ease: 2.2, deck: 3 },
