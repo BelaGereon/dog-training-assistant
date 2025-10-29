@@ -11,15 +11,25 @@ export function nextSchedule(
   userRating: Rating,
   today: Date
 ): ScheduleResult {
-  const nextInterval = getNextInterval(userRating, currentState.intervalInDays);
+  const DECK_BASELINE = [1, 3, 7, 14, 30] as const;
+
+  const proposedInterval = getNextInterval(
+    userRating,
+    currentState.intervalInDays
+  );
   const nextEase = adjustEase(currentState.ease, userRating);
 
   // prettier-ignore
-  const nextDeck =
-      userRating === 0 ? 1                     
-    : userRating === 1 ? currentState.deck - 1 
-    : userRating === 2 ? currentState.deck
-    : currentState.deck + 1;
+  const unclamped =
+    userRating === 0 ? 1
+  : userRating === 1 ? currentState.deck - 1
+  : userRating === 2 ? currentState.deck
+  : currentState.deck + 1;
+
+  const nextDeck = Math.max(1, Math.min(5, unclamped));
+
+  const baseline = DECK_BASELINE[nextDeck - 1];
+  const nextInterval = Math.max(proposedInterval, baseline);
 
   const dueAt = new Date(today);
   dueAt.setDate(dueAt.getDate() + nextInterval);
