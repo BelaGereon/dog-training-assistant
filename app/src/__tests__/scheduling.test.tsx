@@ -115,9 +115,9 @@ describe("Scheduling - ", () => {
 
     beforeEach(() => {
       currentSchedule = {
-        intervalInDays: 4,
-        ease: 2.5,
-        deck: 3,
+        intervalInDays: 3,
+        ease: 1.8,
+        deck: 1,
       };
 
       originalEase = currentSchedule.ease;
@@ -126,8 +126,8 @@ describe("Scheduling - ", () => {
     });
 
     it("doubles the training interval and sets dueAt accordingly", () => {
-      expect(result.intervalInDays).toBe(8);
-      expect(iso(result.dueAt)).toBe("2025-01-09"); // 2025-01-01 + 8 days
+      expect(result.intervalInDays).toBe(6); // 3 * 2 = 6
+      expect(iso(result.dueAt)).toBe("2025-01-07"); // 2025-01-01 + 8 days
     });
 
     it("raises ease by 0.05", () => {
@@ -186,7 +186,7 @@ describe("Scheduling - ", () => {
       currentSchedule = {
         intervalInDays: 10,
         ease: 2.5,
-        deck: 3,
+        deck: 2,
       };
       originalEase = currentSchedule.ease;
       result = run();
