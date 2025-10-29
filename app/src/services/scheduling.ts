@@ -16,9 +16,10 @@ export function nextSchedule(
 
   // prettier-ignore
   const nextDeck =
-    userRating === 0 ? 1                    : 
-    userRating === 1 ? currentState.deck - 1: 
-    userRating === 2 ? currentState.deck    : currentState.deck + 1;
+      userRating === 0 ? 1                     
+    : userRating === 1 ? currentState.deck - 1 
+    : userRating === 2 ? currentState.deck
+    : currentState.deck + 1;
 
   const dueAt = new Date(today);
   dueAt.setDate(dueAt.getDate() + nextInterval);
