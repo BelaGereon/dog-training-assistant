@@ -1,74 +1,72 @@
-import type { ScheduleState, ScheduleResult, Rating } from "../types";
+// scheduling.ts
+import type { ScheduleState, ScheduleResult } from "../types";
 
-const OK_FACTOR = 1.4; // multiplier for "OK" rating to extend interval by ~40%
-const EASY_FACTOR = 2.0; // multiplier for "Easy" rating to double the interval
+export const POLICY = {
+  ratings: { FORGOT: 0, HARD: 1, OK: 2, EASY: 3 },
+  factors: { OK: 1.4, EASY: 2.0 },
+  ease: { FORGOT: -0.3, HARD: -0.15, OK: 0.0, EASY: +0.05 },
+  easeMin: 1.8,
+  easeMax: 3.0,
+  hardDays: 2,
+  forgotDays: 1,
+  deckBaseline: [1, 3, 7, 14, 30],
+} as const;
 
-const MIN_EASE = 1.8;
-const MAX_EASE = 3.0;
+export type Rating = keyof typeof POLICY.ratings; // "FORGOT" | "HARD" | "OK" | "EASY"
 
 export function nextSchedule(
-  currentState: ScheduleState,
-  userRating: Rating,
+  state: ScheduleState,
+  rating: Rating,
   today: Date
 ): ScheduleResult {
-  const DECK_BASELINE = [1, 3, 7, 14, 30] as const;
+  const proposed = proposedInterval(state.intervalInDays, rating);
+  const nextDeck = computeNextDeck(state.deck, rating);
+  const baseline = POLICY.deckBaseline[nextDeck - 1];
+  const interval = Math.max(proposed, baseline);
 
-  const proposedInterval = getNextInterval(
-    userRating,
-    currentState.intervalInDays
-  );
-  const nextEase = adjustEase(currentState.ease, userRating);
+  const ease = adjustEase(state.ease, rating);
+  const dueAt = addDaysUTC(today, interval);
 
-  // prettier-ignore
-  const unclamped =
-    userRating === 0 ? 1
-  : userRating === 1 ? currentState.deck - 1
-  : userRating === 2 ? currentState.deck
-  : currentState.deck + 1;
-
-  const nextDeck = Math.max(1, Math.min(5, unclamped));
-
-  const baseline = DECK_BASELINE[nextDeck - 1];
-  const nextInterval = Math.max(proposedInterval, baseline);
-
-  const dueAt = new Date(today);
-  dueAt.setDate(dueAt.getDate() + nextInterval);
-
-  // Return the new schedule state carrying over ease and deck, with updated interval and due date
-  return {
-    ...currentState,
-    intervalInDays: nextInterval,
-    ease: nextEase,
-    deck: nextDeck,
-    dueAt,
-  }; // spread existing state and add new fields
+  return { ...state, intervalInDays: interval, ease, deck: nextDeck, dueAt };
 }
 
-function getNextInterval(userRating: Rating, intervalInDays: number): number {
-  if (userRating === 0) {
-    return 1; // if "Forgot", schedule for next day
+// --- helpers ---
+
+function proposedInterval(prev: number, rating: Rating): number {
+  switch (rating) {
+    case "FORGOT":
+      return POLICY.forgotDays;
+    case "HARD":
+      return POLICY.hardDays;
+    case "OK":
+      return Math.ceil(prev * POLICY.factors.OK);
+    case "EASY":
+      return Math.ceil(prev * POLICY.factors.EASY);
   }
+}
 
-  if (userRating === 1) {
-    return 2; // if "Hard", schedule for 2 days later
-  }
-
-  const ratingMultiplier =
-    userRating === 2 ? OK_FACTOR : userRating === 3 ? EASY_FACTOR : 1;
-
-  return Math.max(
-    1, // ensure at least 1 day
-    Math.ceil(intervalInDays * ratingMultiplier)
-  );
+function computeNextDeck(current: number, rating: Rating): number {
+  const unclamped =
+    rating === "FORGOT"
+      ? 1
+      : rating === "HARD"
+      ? current - 1
+      : rating === "OK"
+      ? current
+      : current + 1;
+  return Math.max(1, Math.min(5, unclamped));
 }
 
 function adjustEase(ease: number, rating: Rating): number {
-  // prettier-ignore
-  const modifier =
-    rating === 3 ? +0.05 :
-    rating === 1 ? -0.15 :
-    rating === 0 ? -0.30 : 0.0;
+  const delta = POLICY.ease[rating];
+  const next = ease + delta;
+  return Math.max(POLICY.easeMin, Math.min(POLICY.easeMax, next));
+}
 
-  const next = ease + modifier;
-  return Math.max(MIN_EASE, Math.min(MAX_EASE, next));
+function addDaysUTC(d: Date, days: number): Date {
+  const utc = new Date(
+    Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate())
+  );
+  utc.setUTCDate(utc.getUTCDate() + days);
+  return utc;
 }

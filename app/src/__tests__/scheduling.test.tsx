@@ -12,9 +12,8 @@ describe("Scheduling - ", () => {
   let result: ScheduleResult;
   let originalEase: number;
 
-  describe('when I log the exercise as "OK" (rating=2)', () => {
-    const rating = 2;
-    const run = () => nextSchedule(currentSchedule, rating, TODAY);
+  describe('when I log the exercise as "OK"', () => {
+    const run = () => nextSchedule(currentSchedule, "OK", TODAY);
 
     beforeEach(() => {
       currentSchedule = {
@@ -54,10 +53,8 @@ describe("Scheduling - ", () => {
     });
   });
 
-  describe('when I log the exercise as "Forgot" (rating=0)', () => {
-    const rating = 0;
-
-    const run = () => nextSchedule(currentSchedule, rating, TODAY);
+  describe('when I log the exercise as "Forgot"', () => {
+    const run = () => nextSchedule(currentSchedule, "FORGOT", TODAY);
 
     beforeEach(() => {
       currentSchedule = {
@@ -109,9 +106,8 @@ describe("Scheduling - ", () => {
     });
   });
 
-  describe('when I log the exercise as "Easy" (rating=3)', () => {
-    const rating = 3;
-    const run = () => nextSchedule(currentSchedule, rating, TODAY);
+  describe('when I log the exercise as "Easy"', () => {
+    const run = () => nextSchedule(currentSchedule, "EASY", TODAY);
 
     beforeEach(() => {
       currentSchedule = {
@@ -178,9 +174,8 @@ describe("Scheduling - ", () => {
     });
   });
 
-  describe('when I log the exercise as "Hard" (rating=1)', () => {
-    const rating = 1;
-    const run = () => nextSchedule(currentSchedule, rating, TODAY);
+  describe('when I log the exercise as "Hard"', () => {
+    const run = () => nextSchedule(currentSchedule, "HARD", TODAY);
 
     beforeEach(() => {
       currentSchedule = {
