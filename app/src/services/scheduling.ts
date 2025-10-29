@@ -13,6 +13,7 @@ export function nextSchedule(
 ): ScheduleResult {
   const nextInterval = getNextInterval(userRating, currentState.intervalInDays);
   const nextEase = adjustEase(currentState.ease, userRating);
+
   // prettier-ignore
   const nextDeck =
     userRating === 0 ? 1                    : 
