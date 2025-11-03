@@ -12,6 +12,8 @@ type Buckets = {
   upcoming: Exercise[];
 };
 
+const dayKeyUTC = (d: Date) => d.toISOString().slice(0, 10);
+
 describe("Bucketing - ", () => {
   describe("when an exercise is added", () => {
     const today = new Date("2025-01-01");
@@ -28,7 +30,7 @@ describe("Bucketing - ", () => {
 
     it("places the exercise in the correct bucket based on due date", () => {
       function bucketByDueDate(exercise: Exercise, dueDate: Date): void {
-        if (dueDate === today) {
+        if (dayKeyUTC(dueDate) === dayKeyUTC(today)) {
           buckets.dueToday.push(exercise);
         }
       }
