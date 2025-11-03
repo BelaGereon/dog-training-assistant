@@ -1,16 +1,5 @@
 import { describe, it, expect } from "vitest";
-
-type Exercise = {
-  id: string;
-  title: string;
-  dueAt: string;
-};
-
-type Buckets = {
-  overdue: Exercise[];
-  dueToday: Exercise[];
-  upcoming: Exercise[];
-};
+import type { Buckets, Exercise } from "../services/bucketing";
 
 const dayKeyUTC = (d: Date) => d.toISOString().slice(0, 10);
 
