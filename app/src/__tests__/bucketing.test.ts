@@ -51,6 +51,34 @@ describe("Bucketing - ", () => {
       expect(result.upcoming[0]).toEqual(exercise);
     });
 
-    it.todo("splits multiple exercises into the correct buckets");
+    it("splits multiple exercises into the correct buckets", () => {
+      const now = new Date("2025-01-10T12:00:00.000Z");
+      const exercises: Exercise[] = [
+        {
+          id: "1",
+          title: "Overdue Exercise",
+          dueAt: "2025-01-09T23:59:59.999Z",
+        },
+        {
+          id: "2",
+          title: "Due Today Exercise",
+          dueAt: "2025-01-10T08:00:00.000Z",
+        },
+        {
+          id: "3",
+          title: "Upcoming Exercise",
+          dueAt: "2025-01-11T00:00:00.000Z",
+        },
+      ];
+
+      const result = bucketExercisesByDueDate(exercises, now);
+
+      expect(result.overdue).toHaveLength(1);
+      expect(result.overdue[0].id).toBe("1");
+      expect(result.dueToday).toHaveLength(1);
+      expect(result.dueToday[0].id).toBe("2");
+      expect(result.upcoming).toHaveLength(1);
+      expect(result.upcoming[0].id).toBe("3");
+    });
   });
 });
