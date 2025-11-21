@@ -26,6 +26,10 @@ export function bucketExercisesByDueDate(
     const dueDate = new Date(exercise.dueAt);
     const dueKey = dayKeyLocal(dueDate);
 
+    if (Number.isNaN(dueDate.getTime())) {
+      throw new Error(`Invalid dueAt date for exercise ${exercise.id}`);
+    }
+
     if (dueKey < todayKey) {
       buckets.overdue.push(exercise);
     } else if (dueKey === todayKey) {
