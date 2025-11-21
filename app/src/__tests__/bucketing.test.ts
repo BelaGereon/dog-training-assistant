@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
-import { bucketExercisesByDueDate, type Exercise } from "../services/bucketing";
+import { bucketExercisesByDueDate } from "../services/bucketing";
+import { type Exercise } from "../domain/exercise";
 
 describe("Bucketing - ", () => {
   describe("bucketExercisesByDueDate", () => {

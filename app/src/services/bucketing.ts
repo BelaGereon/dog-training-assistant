@@ -1,8 +1,4 @@
-export type Exercise = {
-  id: string;
-  title: string;
-  dueAt: string;
-};
+import type { Exercise } from "../domain/exercise";
 
 export type Buckets = {
   overdue: Exercise[];
