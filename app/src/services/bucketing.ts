@@ -6,21 +6,27 @@ export type Buckets = {
   upcoming: Exercise[];
 };
 
+const dayKeyLocal = (d: Date) =>
+  `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(
+    d.getDate()
+  ).padStart(2, "0")}`;
+
+const parseDueDate = (exercise: Exercise): Date => {
+  const dueDate = new Date(exercise.dueAt);
+  if (Number.isNaN(dueDate.getTime())) {
+    throw new Error(`Invalid dueAt date for exercise ${exercise.id}`);
+  }
+  return dueDate;
+};
+
+const byDueDate = (a: Exercise, b: Exercise) =>
+  parseDueDate(a).getTime() - parseDueDate(b).getTime();
+
 export function bucketExercisesByDueDate(
   exercises: Exercise[],
   now: Date
 ): Buckets {
-  const dayKeyLocal = (d: Date) =>
-    `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(
-      d.getDate()
-    ).padStart(2, "0")}`;
   const todayKey = dayKeyLocal(now);
-  const byDueDate = (a: Exercise, b: Exercise) => {
-    const dateA = new Date(a.dueAt);
-    const dateB = new Date(b.dueAt);
-    return dateA.getTime() - dateB.getTime();
-  };
-
   const buckets: Buckets = {
     overdue: [],
     dueToday: [],
@@ -28,12 +34,7 @@ export function bucketExercisesByDueDate(
   };
 
   for (const exercise of exercises) {
-    const dueDate = new Date(exercise.dueAt);
-
-    if (Number.isNaN(dueDate.getTime())) {
-      throw new Error(`Invalid dueAt date for exercise ${exercise.id}`);
-    }
-
+    const dueDate = parseDueDate(exercise);
     const dueKey = dayKeyLocal(dueDate);
 
     if (dueKey < todayKey) {
