@@ -103,5 +103,12 @@ describe("Bucketing - ", () => {
       expect(result.dueToday[0]).toEqual(exercise);
       expect(result.upcoming).toHaveLength(0);
     });
+
+    it("throws when encountering an exercise with an invalid dueAt", () => {
+      const now = new Date("2025-01-01T10:00:00");
+      const bad: Exercise = { id: "x", title: "Broken", dueAt: "not-a-date" };
+
+      expect(() => bucketExercisesByDueDate([bad], now)).toThrowError();
+    });
   });
 });
