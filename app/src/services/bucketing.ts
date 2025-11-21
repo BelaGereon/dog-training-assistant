@@ -15,6 +15,7 @@ export function bucketExercisesByDueDate(
   now: Date
 ): Buckets {
   const dayKeyUTC = (d: Date) => d.toISOString().split("T")[0];
+  const todayKey = dayKeyUTC(now);
 
   const buckets: Buckets = {
     overdue: [],
@@ -26,10 +27,10 @@ export function bucketExercisesByDueDate(
     const dueDate = new Date(exercise.dueAt);
     const dueKey = dayKeyUTC(dueDate);
 
-    if (dueKey === dayKeyUTC(now)) {
+    if (dueKey === todayKey) {
       buckets.dueToday.push(exercise);
     }
-    if (dueKey < dayKeyUTC(now)) {
+    if (dueKey < todayKey) {
       buckets.overdue.push(exercise);
     }
   }
