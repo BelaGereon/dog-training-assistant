@@ -27,11 +27,12 @@ export function bucketExercisesByDueDate(
     const dueDate = new Date(exercise.dueAt);
     const dueKey = dayKeyUTC(dueDate);
 
-    if (dueKey === todayKey) {
-      buckets.dueToday.push(exercise);
-    }
     if (dueKey < todayKey) {
       buckets.overdue.push(exercise);
+    } else if (dueKey === todayKey) {
+      buckets.dueToday.push(exercise);
+    } else {
+      buckets.upcoming.push(exercise);
     }
   }
 
