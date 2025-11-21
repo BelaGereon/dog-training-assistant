@@ -1,37 +1,38 @@
 import { describe, it, expect } from "vitest";
-import type { Buckets, Exercise } from "../services/bucketing";
-
-const dayKeyUTC = (d: Date) => d.toISOString().slice(0, 10);
+import { bucketExercisesByDueDate, type Exercise } from "../services/bucketing";
 
 describe("Bucketing - ", () => {
-  describe("when an exercise is added", () => {
-    const today = new Date("2025-01-01");
-    const exercise: Exercise = {
-      id: "1",
-      title: "Sample Exercise",
-      dueAt: today.toISOString(),
-    };
-    const buckets: Buckets = {
-      overdue: [],
-      dueToday: [],
-      upcoming: [],
-    };
+  describe("bucketExercisesByDueDate", () => {
+    it("puts an exercise due today into the 'dueToday' bucket", () => {
+      const now = new Date("2025-01-01T10:00:00.000Z");
+      const exercise: Exercise = {
+        id: "1",
+        title: "Sample Exercise",
+        dueAt: now.toISOString(),
+      };
 
-    it("places the exercise in the correct bucket based on due date", () => {
-      function bucketByDueDate(exercise: Exercise, dueDate: Date): void {
-        if (dayKeyUTC(dueDate) === dayKeyUTC(today)) {
-          buckets.dueToday.push(exercise);
-        }
-      }
+      const result = bucketExercisesByDueDate([exercise], now);
 
-      const dueDate = new Date(exercise.dueAt);
+      expect(result.overdue).toHaveLength(0);
+      expect(result.dueToday).toHaveLength(1);
+      expect(result.dueToday[0]).toEqual(exercise);
+      expect(result.upcoming).toHaveLength(0);
+    });
 
-      bucketByDueDate(exercise, dueDate);
+    it("puts an exercise due before today into the 'overdue' bucket", () => {
+      // now = 2025-01-02
+      // exercise.dueAt = 2025-01-01
+      // expect(result.overdue).toContain(exercise)
+    });
 
-      expect(buckets.overdue).toHaveLength(0);
-      expect(buckets.dueToday).toHaveLength(1);
-      expect(buckets.dueToday).toContain(exercise);
-      expect(buckets.upcoming).toHaveLength(0);
+    it("puts an exercise due after today into the 'upcoming' bucket", () => {
+      // now = 2025-01-01
+      // exercise.dueAt = 2025-01-02
+    });
+
+    it("splits multiple exercises into the correct buckets", () => {
+      // one yesterday, one today, one tomorrow
+      // expect each bucket to have exactly the right one
     });
   });
 });

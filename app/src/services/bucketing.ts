@@ -9,3 +9,10 @@ export type Buckets = {
   dueToday: Exercise[];
   upcoming: Exercise[];
 };
+
+export function bucketExercisesByDueDate(
+  exercises: Exercise[],
+  now: Date
+): Buckets {
+  /* impl later */
+}
