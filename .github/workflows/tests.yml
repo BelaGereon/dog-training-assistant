@@ -13,6 +13,8 @@ concurrency:
 jobs:
   test:
     name: Unit + E2E Tests
+    env:
+      TZ: Europe/Berlin
     runs-on: ubuntu-latest
     defaults:
       run:
