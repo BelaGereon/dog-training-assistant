@@ -15,6 +15,11 @@ export function bucketExercisesByDueDate(
       d.getDate()
     ).padStart(2, "0")}`;
   const todayKey = dayKeyLocal(now);
+  const byDueDate = (a: Exercise, b: Exercise) => {
+    const dateA = new Date(a.dueAt);
+    const dateB = new Date(b.dueAt);
+    return dateA.getTime() - dateB.getTime();
+  };
 
   const buckets: Buckets = {
     overdue: [],
@@ -38,6 +43,10 @@ export function bucketExercisesByDueDate(
       buckets.upcoming.push(exercise);
     }
   }
+
+  buckets.overdue.sort(byDueDate);
+  buckets.dueToday.sort(byDueDate);
+  buckets.upcoming.sort(byDueDate);
 
   return buckets;
 }
