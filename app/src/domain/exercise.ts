@@ -1,5 +1,7 @@
+export type ExerciseId = string;
+
 export type Exercise = {
-  id: string;
+  id: ExerciseId;
   title: string;
   dueAt: string;
 };
