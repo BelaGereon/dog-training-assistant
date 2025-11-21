@@ -19,20 +19,8 @@ describe("Bucketing - ", () => {
       expect(result.upcoming).toHaveLength(0);
     });
 
-    it("puts an exercise due before today into the 'overdue' bucket", () => {
-      // now = 2025-01-02
-      // exercise.dueAt = 2025-01-01
-      // expect(result.overdue).toContain(exercise)
-    });
-
-    it("puts an exercise due after today into the 'upcoming' bucket", () => {
-      // now = 2025-01-01
-      // exercise.dueAt = 2025-01-02
-    });
-
-    it("splits multiple exercises into the correct buckets", () => {
-      // one yesterday, one today, one tomorrow
-      // expect each bucket to have exactly the right one
-    });
+    it.todo("puts an exercise due before today into the 'overdue' bucket");
+    it.todo("puts an exercise due after today into the 'upcoming' bucket");
+    it.todo("splits multiple exercises into the correct buckets");
   });
 });
