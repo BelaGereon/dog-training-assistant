@@ -80,5 +80,27 @@ describe("Bucketing - ", () => {
       expect(result.upcoming).toHaveLength(1);
       expect(result.upcoming[0].id).toBe("3");
     });
+
+    it("uses the local calendar day, not UTC, when determining 'today'", () => {
+      // Imagine a user in Europe/Berlin (UTC+1).
+      // - Exercise is due just after local midnight on Jan 2.
+      // - 'now' is midday on Jan 2.
+      //
+      // In local time, both are Jan 2 → should be 'dueToday'.
+
+      const now = new Date("2025-01-02T12:00:00+01:00");
+      const exercise: Exercise = {
+        id: "4",
+        title: "Edge case: just after midnight",
+        dueAt: "2025-01-02T00:30:00+01:00",
+      };
+
+      const result = bucketExercisesByDueDate([exercise], now);
+
+      expect(result.overdue).toHaveLength(0);
+      expect(result.dueToday).toHaveLength(1);
+      expect(result.dueToday[0]).toEqual(exercise);
+      expect(result.upcoming).toHaveLength(0);
+    });
   });
 });
