@@ -110,5 +110,17 @@ describe("Bucketing - ", () => {
 
       expect(() => bucketExercisesByDueDate([bad], now)).toThrowError();
     });
+
+    it("orders exercises inside each bucket by due date ascending", () => {
+      const now = new Date("2025-01-10T12:00:00");
+      const exercises: Exercise[] = [
+        { id: "second", title: "", dueAt: "2025-01-10T20:00:00" },
+        { id: "first", title: "", dueAt: "2025-01-10T08:00:00" },
+      ];
+
+      const result = bucketExercisesByDueDate(exercises, now);
+
+      expect(result.dueToday.map((e) => e.id)).toEqual(["first", "second"]);
+    });
   });
 });
