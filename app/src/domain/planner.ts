@@ -1,18 +1,4 @@
-import type { Exercise } from "./exercise";
-
-/**
- * PlannerBuckets
- *
- * Logical grouping of exercises for "review today".
- * The ordering inside each array is important:
- * - Planner decides the sort order.
- * - UI just renders in the order given (no re-sorting in components).
- */
-export type PlannerBuckets = {
-  overdue: Exercise[];
-  dueToday: Exercise[];
-  upcoming: Exercise[];
-};
+import type { Buckets } from "../services/bucketing";
 
 /**
  * PlannerService
@@ -31,5 +17,5 @@ export interface PlannerService {
    *
    * Implementation details are hidden behind this contract.
    */
-  getTodayBuckets(): Promise<PlannerBuckets>;
+  getTodayBuckets(): Promise<Buckets>;
 }

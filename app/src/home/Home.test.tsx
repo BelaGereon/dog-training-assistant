@@ -4,13 +4,14 @@ import { describe, it, expect, vi } from "vitest";
 import { render, screen, within } from "@testing-library/react";
 
 import { Home } from "./Home";
-import type { PlannerBuckets, PlannerService } from "../domain/planner";
+import type { PlannerService } from "../domain/planner";
+import type { Buckets } from "../services/bucketing";
 
 /**
  * Helper to build a fake PlannerService for a test case.
  * It always resolves to the given buckets.
  */
-function createFakePlanner(buckets: PlannerBuckets): PlannerService {
+function createFakePlanner(buckets: Buckets): PlannerService {
   return {
     getTodayBuckets: vi.fn().mockResolvedValue(buckets),
   };
@@ -18,7 +19,7 @@ function createFakePlanner(buckets: PlannerBuckets): PlannerService {
 
 describe("Home", () => {
   it("renders overdue and due today sections with correct order and counts", async () => {
-    const buckets: PlannerBuckets = {
+    const buckets: Buckets = {
       overdue: [
         {
           id: "o1",
@@ -83,7 +84,7 @@ describe("Home", () => {
   });
 
   it("shows an empty state when there are no overdue exercises", async () => {
-    const buckets: PlannerBuckets = {
+    const buckets: Buckets = {
       overdue: [],
       dueToday: [
         {
@@ -116,7 +117,7 @@ describe("Home", () => {
   });
 
   it("shows an empty state when there are no due today exercises", async () => {
-    const buckets: PlannerBuckets = {
+    const buckets: Buckets = {
       overdue: [
         {
           id: "t1",
@@ -150,7 +151,7 @@ describe("Home", () => {
 
   it("shows a loading state before the planner data arrives", () => {
     const planner: PlannerService = {
-      getTodayBuckets: vi.fn(() => new Promise<PlannerBuckets>(() => {})), // never resolves
+      getTodayBuckets: vi.fn(() => new Promise<Buckets>(() => {})), // never resolves
     };
 
     render(<Home planner={planner} />);
