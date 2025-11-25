@@ -29,11 +29,15 @@ export function Home({ planner }: HomeProps) {
 
       <section data-testid="due-today-section">
         <h2>due today ({buckets?.dueToday.length ?? 0})</h2>
-        <ul>
-          {buckets?.dueToday.map((exercise) => (
-            <li key={exercise.id}>{exercise.title}</li>
-          ))}
-        </ul>
+        {buckets && buckets.dueToday.length === 0 ? (
+          <p>No due today exercises.</p>
+        ) : (
+          <ul>
+            {buckets?.dueToday.map((exercise) => (
+              <li key={exercise.id}>{exercise.title}</li>
+            ))}
+          </ul>
+        )}
       </section>
     </div>
   );
