@@ -16,11 +16,15 @@ export function Home({ planner }: HomeProps) {
     <div>
       <section data-testid="overdue-section">
         <h2>overdue ({buckets?.overdue.length ?? 0})</h2>
-        <ul>
-          {buckets?.overdue.map((exercise) => (
-            <li key={exercise.id}>{exercise.title}</li>
-          ))}
-        </ul>
+        {buckets && buckets.overdue.length === 0 ? (
+          <p>No overdue exercises.</p>
+        ) : (
+          <ul>
+            {buckets?.overdue.map((exercise) => (
+              <li key={exercise.id}>{exercise.title}</li>
+            ))}
+          </ul>
+        )}
       </section>
 
       <section data-testid="due-today-section">
