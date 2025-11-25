@@ -147,4 +147,14 @@ describe("Home", () => {
       within(dueTodaySection).getByText(/no due today exercises/i)
     ).toBeInTheDocument();
   });
+
+  it("shows a loading state before the planner data arrives", () => {
+    const planner: PlannerService = {
+      getTodayBuckets: vi.fn(() => new Promise<PlannerBuckets>(() => {})), // never resolves
+    };
+
+    render(<Home planner={planner} />);
+
+    expect(screen.getByText(/loading/i)).toBeInTheDocument();
+  });
 });

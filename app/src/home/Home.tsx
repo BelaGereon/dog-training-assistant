@@ -14,6 +14,7 @@ export function Home({ planner }: HomeProps) {
 
   return (
     <div>
+      {!buckets && <p>Loading...</p>}
       <section data-testid="overdue-section">
         <h2>overdue ({buckets?.overdue.length ?? 0})</h2>
         {buckets && buckets.overdue.length === 0 ? (
