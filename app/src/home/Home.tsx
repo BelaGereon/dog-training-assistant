@@ -19,12 +19,12 @@ export function Home({ planner }: HomeProps) {
   return (
     <div>
       <section data-testid="overdue-section">
-        <h2>overdue ({buckets?.overdue.length ?? 0})</h2>
-        {buckets && buckets.overdue.length === 0 ? (
+        <h2>overdue ({buckets.overdue.length ?? 0})</h2>
+        {buckets.overdue.length === 0 ? (
           <p>No overdue exercises.</p>
         ) : (
           <ul>
-            {buckets?.overdue.map((exercise) => (
+            {buckets.overdue.map((exercise) => (
               <li key={exercise.id}>{exercise.title}</li>
             ))}
           </ul>
@@ -32,12 +32,12 @@ export function Home({ planner }: HomeProps) {
       </section>
 
       <section data-testid="due-today-section">
-        <h2>due today ({buckets?.dueToday.length ?? 0})</h2>
-        {buckets && buckets.dueToday.length === 0 ? (
+        <h2>due today ({buckets.dueToday.length ?? 0})</h2>
+        {buckets.dueToday.length === 0 ? (
           <p>No due today exercises.</p>
         ) : (
           <ul>
-            {buckets?.dueToday.map((exercise) => (
+            {buckets.dueToday.map((exercise) => (
               <li key={exercise.id}>{exercise.title}</li>
             ))}
           </ul>
