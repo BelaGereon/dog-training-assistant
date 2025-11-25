@@ -114,4 +114,37 @@ describe("Home", () => {
     expect(dueTodayItems).toHaveLength(1);
     expect(dueTodayItems[0]).toHaveTextContent("Only due today exercise");
   });
+
+  it("shows an empty state when there are no due today exercises", async () => {
+    const buckets: PlannerBuckets = {
+      overdue: [
+        {
+          id: "t1",
+          title: "Only overdue exercise",
+          dueAt: "2025-01-03T10:00:00.000Z",
+        },
+      ],
+      dueToday: [],
+      upcoming: [],
+    };
+
+    const planner = createFakePlanner(buckets);
+
+    render(<Home planner={planner} />);
+
+    // Wait until the due-today heading appears, so we know data has loaded
+    await screen.findByRole("heading", { name: /overdue \(1\)/i });
+
+    // Empty overdue state
+    const overdueSection = screen.getByTestId("overdue-section");
+    const overdueItems = within(overdueSection).getAllByRole("listitem");
+    expect(overdueItems).toHaveLength(1);
+    expect(overdueItems[0]).toHaveTextContent("Only overdue exercise");
+
+    // Due today still shows the one task
+    const dueTodaySection = screen.getByTestId("due-today-section");
+    expect(
+      within(dueTodaySection).getByText(/no due today exercises/i)
+    ).toBeInTheDocument();
+  });
 });
