@@ -1,0 +1,42 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Home > renders overdue and due today sections with correct order and counts 1`] = `
+<div>
+  <div>
+    <section
+      data-testid="overdue-section"
+    >
+      <h2>
+        overdue (
+        2
+        )
+      </h2>
+      <ul>
+        <li>
+          Oldest overdue
+        </li>
+        <li>
+          Newer overdue
+        </li>
+      </ul>
+    </section>
+    <section
+      data-testid="due-today-section"
+    >
+      <h2>
+        due today (
+        2
+        )
+      </h2>
+      <ul>
+        <li>
+          Morning training
+        </li>
+        <li>
+          Evening training
+        </li>
+      </ul>
+    </section>
+  </div>
+</div>
+`;
