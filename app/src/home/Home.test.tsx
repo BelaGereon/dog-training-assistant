@@ -156,5 +156,8 @@ describe("Home", () => {
     render(<Home planner={planner} />);
 
     expect(screen.getByText(/loading/i)).toBeInTheDocument();
+
+    expect(screen.queryByTestId("overdue-section")).not.toBeInTheDocument();
+    expect(screen.queryByTestId("due-today-section")).not.toBeInTheDocument();
   });
 });
